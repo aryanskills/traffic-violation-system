@@ -1,0 +1,24 @@
+# Python
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/.pytest_cache
+**/htmlcov
+**/.mypy_cache
+**/.ruff_cache
+
+# Node
+**/node_modules
+frontend/.cache
+frontend/dist
+
+# Data (mounted as volumes)
+data/uploads/*
+data/evidence/*
+data/benchmarks/*
+
+# Dev files
+**/.env
+**/.git
+**/.gitignore
+**/README.md
