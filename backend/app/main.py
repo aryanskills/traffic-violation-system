@@ -41,9 +41,7 @@ async def lifespan(app: FastAPI):
     await create_tables()
 
     # Warm up pipeline (loads YOLO models + OCR)
-    logger.info("Warming up detection pipeline…")
-    from app.services.detection.pipeline import pipeline
-    pipeline.warm_up()
+    logger.info("Skipping pipeline warm-up. Models will load on first request.")
 
     logger.info("✅  Application ready.")
     yield
