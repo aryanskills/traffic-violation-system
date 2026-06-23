@@ -49,9 +49,9 @@ class DetectionPipeline:
 
     def __init__(self):
         self.preprocessor     = ImagePreprocessor()
-        self.vehicle_detector = VehicleDetector(enable_tracking=True)
-        self.violation_engine = ViolationEngine(helmet_model=None, seatbelt_model=None)
-        self.plate_recognizer = LicensePlateRecognizer()
+        self.vehicle_detector = None
+        self.violation_engine = None
+        self.plate_recognizer = None
         self.evidence_generator = EvidenceGenerator()
         self._ready = False
 
@@ -74,7 +74,20 @@ class DetectionPipeline:
         original_filename: str = "image.jpg",
         location_label: Optional[str] = None,
         camera_id: Optional[str] = None,
-    ) -> DetectionSessionResponse:
+        
+    )# Lazy-load models only when first detection request arrives
+if self.vehicle_detector is None:
+    logger.info("Initializing detection models...")
+    self.vehicle_detector = VehicleDetector(enable_tracking=True)
+
+if self.violation_engine is None:
+    self.violation_engine = ViolationEngine(
+        helmet_model=None,
+        seatbelt_model=None
+    )
+
+if self.plate_recognizer is None:
+    self.plate_recognizer = LicensePlateRecognizer() -> DetectionSessionResponse:
 
         session_id = uuid.uuid4()
         t_start    = time.perf_counter()
