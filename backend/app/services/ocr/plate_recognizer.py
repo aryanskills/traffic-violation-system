@@ -86,10 +86,10 @@ class LicensePlateRecognizer:
         self._easy_ocr = None
         self._paddle_ocr = None
         self._ocr_loaded = False
-        self._load_ocr()
+        pass
 
     def _load_ocr(self):
-        loaded = []
+        loaded = [] 
         # Try EasyOCR
         try:
             import easyocr
@@ -118,13 +118,18 @@ class LicensePlateRecognizer:
     # ─── Public ────────────────────────────────────────────────────────────────
 
     def recognize(self, image: np.ndarray, vehicle: Optional[DetectedObject] = None) -> PlateResult:
+
+        if not self._ocr_loaded:
+            logger.info("Loading OCR models on first request...")
+            self._load_ocr()
+
         t0 = time.perf_counter()
 
-        # Stage 1: Locate plate
+            # Stage 1: Locate plate
         plate_crop, bbox, det_conf = self._locate_plate(image, vehicle)
 
         if plate_crop is None:
-            return PlateResult(None, None, False, 0.0, 0.0, None)
+                return PlateResult(None, None, False, 0.0, 0.0, None)
 
         # Stage 2: Enhance
         enhanced = self._enhance(plate_crop)

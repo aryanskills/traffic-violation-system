@@ -110,7 +110,7 @@ class VehicleDetector:
         self.img_size = settings.YOLO_IMAGE_SIZE
         self._model = None
         self._loaded = False
-        self._load_model()
+        pass
 
     def _load_model(self):
         try:
@@ -132,11 +132,14 @@ class VehicleDetector:
             raise
 
     def detect(self, image: np.ndarray, augment: bool = False) -> DetectionResult:
+
         if not self._loaded:
-            raise RuntimeError("Model not loaded")
-        h, w = image.shape[:2]
-        t0 = time.perf_counter()
-        try:
+            logger.info("Loading YOLO model on first request...")
+        self._load_model()
+
+    h, w = image.shape[:2]
+    t0 = time.perf_counter()
+    try:
             # Use lower confidence to catch persons on vehicles
             if self.enable_tracking:
                 raw = self._model.track(

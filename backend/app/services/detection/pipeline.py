@@ -68,29 +68,30 @@ class DetectionPipeline:
     # ── Main entry point ─────────────────────────────────────────────────────
 
     async def process_image(
-        self,
-        image_bytes: bytes,
-        db: AsyncSession,
-        original_filename: str = "image.jpg",
-        location_label: Optional[str] = None,
-        camera_id: Optional[str] = None,
-        
-    ) -> DetectionSessionResponse:
-        if self.vehicle_detector is None:
+    self,
+    image_bytes: bytes,
+    db: AsyncSession,
+    original_filename: str = "image.jpg",
+    location_label: Optional[str] = None,
+    camera_id: Optional[str] = None,
+) -> DetectionSessionResponse:
+
+    # Lazy-load models only when first request arrives
+    if self.vehicle_detector is None:
         logger.info("Initializing detection models...")
         self.vehicle_detector = VehicleDetector(enable_tracking=True)
 
     if self.violation_engine is None:
         self.violation_engine = ViolationEngine(
             helmet_model=None,
-            seatbelt_model=None
+            seatbelt_model=None,
         )
 
     if self.plate_recognizer is None:
         self.plate_recognizer = LicensePlateRecognizer()
 
-        session_id = uuid.uuid4()
-        t_start    = time.perf_counter()
+    session_id = uuid.uuid4()
+    t_start = time.perf_counter()
 
         # Create DB record immediately
         db_session = DetectionSession(
