@@ -75,19 +75,19 @@ class DetectionPipeline:
         location_label: Optional[str] = None,
         camera_id: Optional[str] = None,
         
-    )# Lazy-load models only when first detection request arrives
-if self.vehicle_detector is None:
-    logger.info("Initializing detection models...")
-    self.vehicle_detector = VehicleDetector(enable_tracking=True)
+    ) -> DetectionSessionResponse:
+        if self.vehicle_detector is None:
+        logger.info("Initializing detection models...")
+        self.vehicle_detector = VehicleDetector(enable_tracking=True)
 
-if self.violation_engine is None:
-    self.violation_engine = ViolationEngine(
-        helmet_model=None,
-        seatbelt_model=None
-    )
+    if self.violation_engine is None:
+        self.violation_engine = ViolationEngine(
+            helmet_model=None,
+            seatbelt_model=None
+        )
 
-if self.plate_recognizer is None:
-    self.plate_recognizer = LicensePlateRecognizer() -> DetectionSessionResponse:
+    if self.plate_recognizer is None:
+        self.plate_recognizer = LicensePlateRecognizer()
 
         session_id = uuid.uuid4()
         t_start    = time.perf_counter()
